@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Jobs API - OpenAPI 3.0",
+    "description": "Jobs RESTApi.",
+    "contact": {
+      "email": "jordantanaliga@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "basePath": "/api/v1",
+  "schemes": ["http", "https"],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization token"
+    }
+  },
+  "servers": [
+    {
+      "url": "localhost:5000/api/v1"
+    }
+  ],
+  "definitions": {
+    "Job": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "salary": {
+          "type": "number"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Create a new user account",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "Email address for the new user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "Password for the new user",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "Invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Login to an existing user account",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "Email address for the user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "Password for the user",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "headers": {
+              "Authorization": {
+                "type": "string",
+                "description": "JWT token for authorization"
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email or password"
+          }
+        }
+      }
+    }
+  }
+}
