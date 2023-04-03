@@ -24,7 +24,7 @@ const authenticationMiddleware = (req, res, next) => __awaiter(void 0, void 0, v
     try {
         const payload = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         const user = {
-            id: payload.userId,
+            userId: payload.userId,
             name: payload.name,
             email: payload.email,
         };

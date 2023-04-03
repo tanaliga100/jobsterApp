@@ -18,7 +18,7 @@ const JobSchema: Schema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       required: [true, "Please provide a assigned User"],
     },
     jobType: {

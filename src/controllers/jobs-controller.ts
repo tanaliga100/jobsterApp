@@ -6,17 +6,16 @@ import Job from "../models/job-model";
 
 const GET_JOBS = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
-    console.log("REQUEST", req.url);
+    const { search, status, jobType, sort } = req.query;
 
     const {
-      user: { id: userId },
+      user: { userId },
     } = req;
-    const { search } = req.query;
     // GET THE JOBS ASSOCIATED WITH CURRENT USER;
     let queryObject: any = {
       createdBy: userId,
     };
-    // SEARCH ALL PROPERTIES
+    // SEARCH MECHANISMS
     if (search != undefined && search != "") {
       queryObject = {
         $or: [
@@ -25,28 +24,56 @@ const GET_JOBS = asyncMiddleware(
         ],
       };
     }
-    console.log({ queryObject });
+    if (status && status !== "all") {
+      queryObject.status = status;
+    }
+    if (jobType && jobType !== "all") {
+      queryObject.jobType = jobType;
+    }
+    let result = Job.find(queryObject);
 
-    const result = Job.find(queryObject);
+    // SORT
+    if (sort === "latest") {
+      result = result.sort("-createdAt");
+    }
+    if (sort === "oldest") {
+      result = result.sort("createdAt");
+    }
+    if (sort === "a-z") {
+      result = result.sort("position");
+    }
+    if (sort === "z-a") {
+      result = result.sort("-position");
+    }
+    //  PAGINATION
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    result = result.skip(skip).limit(limit);
+
+    const totalJobs = await Job.countDocuments(queryObject);
+    const numOfPages = Math.ceil(totalJobs / limit);
+
     if (!result) {
       throw new NotFoundError(`WE CANNOT FIND WHAT YOU ARE LOOKING FOR `);
     }
-    const job = await result;
-    console.log("ALL JOBS", job);
+
+    const jobs = await result;
 
     res
       .status(StatusCodes.OK)
-      .json({ msg: "ALL_JOBS", length: job?.length, job });
+      .json({ msg: "ALL_JOBS", jobs, totalJobs, numOfPages });
   }
 );
 
 const GET_JOB = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
     const {
-      user: { _id },
+      user: { userId },
       params: { id: jobId },
     } = req;
-    const job = await Job.findOne({ _id: jobId, createdBy: _id });
+    const job = await Job.findOne({ _id: jobId, createdBy: userId });
     if (!job) {
       throw new NotFoundError("NO JOB ASSOCIATED WITH ID :" + jobId);
     }
@@ -56,19 +83,16 @@ const GET_JOB = asyncMiddleware(
 
 const CREATE_JOB = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
-    console.log("REQ_USER", req.user);
-    console.log("REQ_BODY", req.body);
-    const { company, position, status } = req.body;
-    req.body.createdBy = req.user.id;
+    req.body.createdBy = req.user.userId;
     const job = await Job.create(req.body);
-    res.status(StatusCodes.CREATED).json({ job });
+    res.status(StatusCodes.CREATED).json({ msg: "JOB_CREATED", job });
   }
 );
 
 const UPDATE_JOB = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
     const {
-      user: { _id },
+      user: { userId },
       params: { id: jobId },
       body: { company, position },
     } = req;
@@ -76,7 +100,7 @@ const UPDATE_JOB = asyncMiddleware(
       throw new BadRequestError("Company or Position must be specified");
     }
     const job = await Job.findOneAndUpdate(
-      { _id: jobId, createdBy: _id },
+      { _id: jobId, createdBy: userId },
       req.body,
       {
         new: true,
@@ -93,17 +117,17 @@ const UPDATE_JOB = asyncMiddleware(
 const DELETE_JOB = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
     const {
-      user: { _id },
+      user: { userId },
       params: { id: jobId },
     } = req;
     const job = await Job.findOneAndDelete({
       _id: jobId,
-      createdBy: _id,
+      createdBy: userId,
     });
     if (!job) {
       throw new NotFoundError(`JOB WITH THIS ID : ${jobId} DOESNT EXIST`);
     }
-    const updated = await Job.find({ createdBy: req.user._id }).sort(
+    const updated = await Job.find({ createdBy: req.user.userId }).sort(
       "createdBy"
     );
     res.status(StatusCodes.OK).send({ msg: "JOB_DELETED", updated });

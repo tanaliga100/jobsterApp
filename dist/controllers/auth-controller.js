@@ -19,8 +19,6 @@ const BadRequestError_1 = __importDefault(require("../errors/BadRequestError"));
 const async_middleware_1 = require("../middlewares/async-middleware");
 const user_model_1 = __importDefault(require("../models/user-model"));
 const REGISTER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("REQ_USER", req.user);
-    console.log("REQ_BODY", req.body);
     const { name, email, password } = req.body;
     // PASSWORD HASHED IN MODEL SCHEMA
     const user = yield user_model_1.default.create(Object.assign({}, req.body));
@@ -29,10 +27,10 @@ const REGISTER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __a
     res.status(http_status_codes_1.StatusCodes.CREATED).json({
         msg: "USER_REGISTERED",
         user: {
-            name: user.name,
+            email: user.email,
             lastName: user.lastName,
             location: user.location,
-            email: user.email,
+            name: user.name,
             token,
         },
     });
@@ -44,7 +42,7 @@ const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awai
     const { email, password } = req.body;
     // CHECK REQUEST BODY
     if (!email || !password) {
-        throw new BadRequestError_1.default("Please provide all values");
+        throw new BadRequestError_1.default("Please provide email and password");
     }
     // FIND EXISTING EMAIL
     const user = yield user_model_1.default.findOne({ email });
@@ -62,10 +60,10 @@ const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awai
     res.status(http_status_codes_1.StatusCodes.OK).json({
         msg: "USER_LOGIN",
         user: {
-            name: user.name,
+            email: user.email,
             lastName: user.lastName,
             location: user.location,
-            email: user.email,
+            name: user.name,
             token,
         },
     });
@@ -76,7 +74,7 @@ const UPDATE_USER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => 
     if (!email || !lastName || !location || !name) {
         throw new BadRequestError_1.default("Please provide all the values");
     }
-    const user = yield user_model_1.default.findOne({ _id: req.user.id });
+    const user = yield user_model_1.default.findOne({ _id: req.user.userId });
     user.name = name;
     user.email = email;
     user.location = location;

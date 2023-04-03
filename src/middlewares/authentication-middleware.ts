@@ -15,7 +15,7 @@ const authenticationMiddleware = async (
   try {
     const payload: any = jwt.verify(token, process.env.JWT_SECRET as string);
     const user = {
-      id: payload.userId,
+      userId: payload.userId,
       name: payload.name,
       email: payload.email,
     };

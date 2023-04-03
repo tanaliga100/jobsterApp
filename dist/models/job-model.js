@@ -22,7 +22,7 @@ const JobSchema = new mongoose_1.default.Schema({
     },
     createdBy: {
         type: mongoose_1.default.Types.ObjectId,
-        ref: "Users",
+        ref: "User",
         required: [true, "Please provide a assigned User"],
     },
     jobType: {
