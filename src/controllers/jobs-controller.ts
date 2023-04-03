@@ -6,8 +6,10 @@ import Job from "../models/job-model";
 
 const GET_JOBS = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
+    console.log("REQUEST", req.url);
+
     const {
-      user: { _id: userId },
+      user: { id: userId },
     } = req;
     const { search } = req.query;
     // GET THE JOBS ASSOCIATED WITH CURRENT USER;
@@ -30,6 +32,8 @@ const GET_JOBS = asyncMiddleware(
       throw new NotFoundError(`WE CANNOT FIND WHAT YOU ARE LOOKING FOR `);
     }
     const job = await result;
+    console.log("ALL JOBS", job);
+
     res
       .status(StatusCodes.OK)
       .json({ msg: "ALL_JOBS", length: job?.length, job });
@@ -52,8 +56,10 @@ const GET_JOB = asyncMiddleware(
 
 const CREATE_JOB = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
+    console.log("REQ_USER", req.user);
+    console.log("REQ_BODY", req.body);
     const { company, position, status } = req.body;
-    req.body.createdBy = req.user._id;
+    req.body.createdBy = req.user.id;
     const job = await Job.create(req.body);
     res.status(StatusCodes.CREATED).json({ job });
   }

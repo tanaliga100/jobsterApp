@@ -22,8 +22,18 @@ const JobSchema = new mongoose_1.default.Schema({
     },
     createdBy: {
         type: mongoose_1.default.Types.ObjectId,
-        ref: "User",
+        ref: "Users",
         required: [true, "Please provide a assigned User"],
+    },
+    jobType: {
+        type: String,
+        enum: ["full-time", "part-time", "remote", "internship"],
+        default: "full-time",
+    },
+    jobLocation: {
+        type: String,
+        required: true,
+        default: "My City",
     },
 }, { timestamps: true });
 const Job = mongoose_1.default.model("Jobs", JobSchema);

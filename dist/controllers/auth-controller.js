@@ -19,6 +19,8 @@ const BadRequestError_1 = __importDefault(require("../errors/BadRequestError"));
 const async_middleware_1 = require("../middlewares/async-middleware");
 const user_model_1 = __importDefault(require("../models/user-model"));
 const REGISTER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("REQ_USER", req.user);
+    console.log("REQ_BODY", req.body);
     const { name, email, password } = req.body;
     // PASSWORD HASHED IN MODEL SCHEMA
     const user = yield user_model_1.default.create(Object.assign({}, req.body));
@@ -37,10 +39,12 @@ const REGISTER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __a
 }));
 exports.REGISTER = REGISTER;
 const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("REQ_USER", req.user);
+    console.log("REQ_BODY", req.body);
     const { email, password } = req.body;
     // CHECK REQUEST BODY
     if (!email || !password) {
-        throw new BadRequestError_1.default("");
+        throw new BadRequestError_1.default("Please provide all values");
     }
     // FIND EXISTING EMAIL
     const user = yield user_model_1.default.findOne({ email });
@@ -70,7 +74,7 @@ exports.LOGIN = LOGIN;
 const UPDATE_USER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, location, lastName } = req.body;
     if (!email || !lastName || !location || !name) {
-        throw new BadRequestError_1.default("Please provide all values");
+        throw new BadRequestError_1.default("Please provide all the values");
     }
     const user = yield user_model_1.default.findOne({ _id: req.user.id });
     user.name = name;

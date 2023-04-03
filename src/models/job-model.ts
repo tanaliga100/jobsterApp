@@ -18,8 +18,18 @@ const JobSchema: Schema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
       required: [true, "Please provide a assigned User"],
+    },
+    jobType: {
+      type: String,
+      enum: ["full-time", "part-time", "remote", "internship"],
+      default: "full-time",
+    },
+    jobLocation: {
+      type: String,
+      required: true,
+      default: "My City",
     },
   },
   { timestamps: true }

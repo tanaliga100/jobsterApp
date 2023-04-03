@@ -18,7 +18,8 @@ const errors_1 = require("../errors");
 const async_middleware_1 = require("../middlewares/async-middleware");
 const job_model_1 = __importDefault(require("../models/job-model"));
 const GET_JOBS = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { user: { _id: userId }, } = req;
+    console.log("REQUEST", req.url);
+    const { user: { id: userId }, } = req;
     const { search } = req.query;
     // GET THE JOBS ASSOCIATED WITH CURRENT USER;
     let queryObject = {
@@ -39,6 +40,7 @@ const GET_JOBS = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __a
         throw new errors_1.NotFoundError(`WE CANNOT FIND WHAT YOU ARE LOOKING FOR `);
     }
     const job = yield result;
+    console.log("ALL JOBS", job);
     res
         .status(http_status_codes_1.StatusCodes.OK)
         .json({ msg: "ALL_JOBS", length: job === null || job === void 0 ? void 0 : job.length, job });
@@ -54,8 +56,10 @@ const GET_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __aw
 }));
 exports.GET_JOB = GET_JOB;
 const CREATE_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("REQ_USER", req.user);
+    console.log("REQ_BODY", req.body);
     const { company, position, status } = req.body;
-    req.body.createdBy = req.user._id;
+    req.body.createdBy = req.user.id;
     const job = yield job_model_1.default.create(req.body);
     res.status(http_status_codes_1.StatusCodes.CREATED).json({ job });
 }));

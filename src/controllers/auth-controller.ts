@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { UnAuthenticatedError } from "../errors";
 import BadRequestError from "../errors/BadRequestError";
@@ -6,7 +6,9 @@ import { asyncMiddleware } from "../middlewares/async-middleware";
 import User from "../models/user-model";
 
 const REGISTER = asyncMiddleware(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: any, res: Response, next: NextFunction) => {
+    console.log("REQ_USER", req.user);
+    console.log("REQ_BODY", req.body);
     const { name, email, password } = req.body;
     // PASSWORD HASHED IN MODEL SCHEMA
     const user = await User.create({ ...req.body });
@@ -26,11 +28,13 @@ const REGISTER = asyncMiddleware(
 );
 
 const LOGIN = asyncMiddleware(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: any, res: Response, next: NextFunction) => {
+    console.log("REQ_USER", req.user);
+    console.log("REQ_BODY", req.body);
     const { email, password } = req.body;
     // CHECK REQUEST BODY
     if (!email || !password) {
-      throw new BadRequestError("");
+      throw new BadRequestError("Please provide all values");
     }
     // FIND EXISTING EMAIL
     const user = await User.findOne({ email });
@@ -64,7 +68,7 @@ const UPDATE_USER = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
     const { name, email, location, lastName } = req.body;
     if (!email || !lastName || !location || !name) {
-      throw new BadRequestError("Please provide all values");
+      throw new BadRequestError("Please provide all the values");
     }
     const user: any = await User.findOne({ _id: req.user.id });
     user.name = name;

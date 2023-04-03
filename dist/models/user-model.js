@@ -53,6 +53,8 @@ const UserSchema = new mongoose_1.default.Schema({
 // HASHED PASSWORD BEFORE SUBMITTING
 UserSchema.pre("save", function () {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!this.isModified("password"))
+            return;
         const salt = yield bcryptjs_1.default.genSalt(10);
         this.password = yield bcryptjs_1.default.hash(this.password, salt);
     });
@@ -68,5 +70,5 @@ UserSchema.methods.comparePassword = function (candidatePassword) {
         return isMatch;
     });
 };
-const User = mongoose_1.default.model("User", UserSchema);
+const User = mongoose_1.default.model("Users", UserSchema);
 exports.default = User;
