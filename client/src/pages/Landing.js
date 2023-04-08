@@ -58,9 +58,13 @@ const Landing = () => {
               </Typography>
             </Stack>
             <Typography variant="body" mt={2}>
-              Crucifix narwhal street art asymmetrical, humblebrag tote bag
-              pop-up fixie raclette taxidermy craft beer. Brunch bitters synth,
-              VHS crucifix heirloom meggings bicycle rights.
+              Welcome to this job tracking app! This app is designed to help you
+              keep track of your job applications, interviews, and offers all in
+              one place. You can easily add new job opportunities to your
+              dashboard and keep track of important details such as the company
+              name, job title, location, application status. You can also add
+              user to the specific job created. It contains listing to keep
+              track of any additional information you may need.
             </Typography>
             <Divider />
             <Link to="/register" className="btn btn-hero">
