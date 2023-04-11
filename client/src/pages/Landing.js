@@ -54,7 +54,7 @@ const Landing = () => {
           <Stack spacing={2}>
             <Stack direction="row">
               <Typography variant="h2" fontWeight="900" fontSize="3rem">
-                job <span style={{ color: "#1976d2" }}>tracking</span> app
+                job <span style={{ color: "#2E7D32" }}>tracking</span> app
               </Typography>
             </Stack>
             <Typography variant="body" mt={2}>
@@ -70,7 +70,7 @@ const Landing = () => {
             <Link to="/register" className="btn btn-hero">
               <ButtonGroup
                 sx={{ textAlign: "center", marginTop: "1rem" }}
-                color="primary"
+                color="success"
                 disableElevation
                 variant="contained"
                 aria-label="Disabled elevation buttons"
