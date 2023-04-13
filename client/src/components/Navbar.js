@@ -1,10 +1,9 @@
-import { Button, Stack, Typography } from "@mui/material";
-import { useState } from "react";
-import { FaAlignLeft, FaCaretDown, FaUserCircle } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import Wrapper from "../assets/wrappers/Navbar";
-import { clearStore, toggleSidebar } from "../features/user/userSlice";
-import Logo from "./Logo";
+import Wrapper from '../assets/wrappers/Navbar';
+import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa';
+import Logo from './Logo';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleSidebar, clearStore } from '../features/user/userSlice';
 
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
@@ -17,38 +16,35 @@ const Navbar = () => {
 
   return (
     <Wrapper>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Button className="toggle-btn" onClick={toggle}>
+      <div className='nav-center'>
+        <button type='button' className='toggle-btn' onClick={toggle}>
           <FaAlignLeft />
-        </Button>
-        <Stack>
+        </button>
+        <div>
           <Logo />
-          <Typography
-            justifyContent="flex-start"
-            variant="h2"
-            fontWeight="900"
-            fontSize="2rem"
-          >
-            Dashboard
-          </Typography>
-        </Stack>
-        <Stack className="btn-container">
-          <Button
-            type="button"
-            className="btn"
+          <h3 className='logo-text'>dashboard</h3>
+        </div>
+        <div className='btn-container'>
+          <button
+            type='button'
+            className='btn'
             onClick={() => setShowLogout(!showLogout)}
           >
             <FaUserCircle />
             {user?.name}
             <FaCaretDown />
-          </Button>
-          <Stack className={showLogout ? "dropdown show-dropdown" : "dropdown"}>
-            <Button onClick={() => dispatch(clearStore("Logging out..."))}>
+          </button>
+          <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'}>
+            <button
+              type='button'
+              className='dropdown-btn'
+              onClick={() => dispatch(clearStore('Logging out...'))}
+            >
               logout
-            </Button>
-          </Stack>
-        </Stack>
-      </Stack>
+            </button>
+          </div>
+        </div>
+      </div>
     </Wrapper>
   );
 };

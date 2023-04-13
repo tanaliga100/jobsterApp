@@ -1,21 +1,21 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Error, Landing, ProtectedRoute, Register } from "./pages";
+import { Landing, Error, Register, ProtectedRoute } from './pages';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
+  Profile,
   AddJob,
   AllJobs,
-  Profile,
-  SharedLayout,
   Stats,
-} from "./pages/dashboard";
+  SharedLayout,
+} from './pages/dashboard';
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route
-          path="/"
+          path='/'
           element={
             <ProtectedRoute>
               <SharedLayout />
@@ -23,15 +23,15 @@ function App() {
           }
         >
           <Route index element={<Stats />} />
-          <Route path="all-jobs" element={<AllJobs />} />
-          <Route path="add-job" element={<AddJob />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path='all-jobs' element={<AllJobs />} />
+          <Route path='add-job' element={<AddJob />} />
+          <Route path='profile' element={<Profile />} />
         </Route>
-        <Route path="landing" element={<Landing />} />
-        <Route path="register" element={<Register />} />
-        <Route path="*" element={<Error />} />
+        <Route path='landing' element={<Landing />} />
+        <Route path='register' element={<Register />} />
+        <Route path='*' element={<Error />} />
       </Routes>
-      <ToastContainer position="top-center" />
+      <ToastContainer position='top-center' />
     </BrowserRouter>
   );
 }

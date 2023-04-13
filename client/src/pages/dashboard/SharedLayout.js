@@ -1,20 +1,19 @@
-import { Grid, Stack } from "@mui/material";
-import { Outlet } from "react-router-dom";
-import Wrapper from "../../assets/wrappers/SharedLayout";
-import { BigSidebar, Navbar, SmallSidebar } from "../../components";
+import { Outlet } from 'react-router-dom';
+import { BigSidebar, Navbar, SmallSidebar } from '../../components';
+import Wrapper from '../../assets/wrappers/SharedLayout';
 const SharedLayout = () => {
   return (
     <Wrapper>
-      <Stack className="dashboard">
+      <main className='dashboard'>
         <SmallSidebar />
         <BigSidebar />
-        <Stack>
+        <div>
           <Navbar />
-          <Grid className="dashboard-page">
+          <div className='dashboard-page'>
             <Outlet />
-          </Grid>
-        </Stack>
-      </Stack>
+          </div>
+        </div>
+      </main>
     </Wrapper>
   );
 };
